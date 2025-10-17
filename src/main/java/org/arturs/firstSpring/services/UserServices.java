@@ -18,4 +18,9 @@ public class UserServices {
         return repository.findAll();
     }
 
+    public int addUser(UserModel user) {
+        repository.save(user);
+        return Math.toIntExact(user.getId());
+    }
+
 }

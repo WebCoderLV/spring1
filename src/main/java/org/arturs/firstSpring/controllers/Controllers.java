@@ -28,7 +28,7 @@ public class Controllers {
     @PostMapping("/user")
     public ResponseEntity<Long> addUser(@Valid @RequestBody UserModel user) {
         Long userId = userService.findOrSaveUser(user);
-        return new ResponseEntity<>(userId, HttpStatus.CREATED);
+        return new ResponseEntity<>(userId, HttpStatus.OK);
     }
 
 }

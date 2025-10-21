@@ -16,7 +16,7 @@ public class UserServices implements UserServiceInterface {
     private final RepositoryInterface repository;
 
     public Long findOrSaveUser(UserModel user) {
-        Optional<UserModel> existingUser = repository.findByName(user.getName());
+        Optional<UserModel> existingUser = repository.findByNameAndPassword(user.getName(), user.getPassword());
         if (existingUser.isPresent()) {
             return existingUser.get().getId();
         } else {

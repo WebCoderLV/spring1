@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1")
-public class Controllers {
+public class UserControllers {
 
     // CRUD operations:
     // Create, Read, Update, Delete

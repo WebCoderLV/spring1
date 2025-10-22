@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.arturs.firstSpring.interfaces.UserServiceInterface;
 import org.arturs.firstSpring.models.UserModel;
-import org.arturs.firstSpring.repositories.RepositoryInterface;
+import org.arturs.firstSpring.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 @Service
 public class UserServices implements UserServiceInterface {
 
-    private final RepositoryInterface repository;
+    private final UserRepository repository;
 
     public Long findOrSaveUser(UserModel user) {
         Optional<UserModel> existingUser = repository.findByNameAndPassword(user.getName(), user.getPassword());

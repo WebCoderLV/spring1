@@ -13,7 +13,9 @@ import org.arturs.firstSpring.utilities.GameUtility;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class GameService implements GameServiceInterface {
@@ -41,6 +43,7 @@ public class GameService implements GameServiceInterface {
     }
 
     public GameDTO compareNumbers(GameModel gameModel) {
+        log.debug("GameModel received: {}", gameModel);
         Optional<GameModel> gameOpt = gameRepository.findById(gameModel.getId());
         if (gameOpt.isPresent()) {
             List<Integer> numberFromDb = List.of(gameOpt.get().getNumber1(), gameOpt.get().getNumber2(),
@@ -64,13 +67,18 @@ public class GameService implements GameServiceInterface {
                 }
             }
             if (p == 4) {
-                gameModel.setWin(true);
-                gameRepository.save(gameModel);
-                return new GameDTO(gameModel.getId(), "4", "0", true);
+                UserModel user = gameOpt.get().getUser();
+                if (user != null) {
+                    gameModel.setWin(true);
+                    gameModel.setUser(user);
+                    gameRepository.save(gameModel);
+                    return new GameDTO(gameModel.getId(), "4", "0", true);
+                } else {
+                    throw new IllegalStateException("Game exists but has no associated user");
+                }
             } else {
                 return new GameDTO(gameModel.getId(), String.valueOf(p), String.valueOf(a), false);
             }
-
         } else {
             throw new IllegalArgumentException("Game not found with id: " + gameModel.getId());
         }

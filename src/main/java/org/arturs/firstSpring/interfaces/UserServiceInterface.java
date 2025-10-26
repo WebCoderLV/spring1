@@ -6,4 +6,6 @@ public interface UserServiceInterface {
 
     Long findOrSaveUser(UserModel user);
 
+    void deleteUser(Long userId);
+
 }

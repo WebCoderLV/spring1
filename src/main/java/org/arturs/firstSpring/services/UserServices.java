@@ -33,5 +33,4 @@ public class UserServices implements UserServiceInterface {
         // Then delete the user
         repository.deleteById(userId);
     }
-
 }

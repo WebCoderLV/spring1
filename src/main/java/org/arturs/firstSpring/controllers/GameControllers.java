@@ -5,6 +5,7 @@ import org.arturs.firstSpring.models.GameModel;
 import org.arturs.firstSpring.services.GameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1")
+@CrossOrigin(origins = "*")
 public class GameControllers {
 
     private final GameService gameService;

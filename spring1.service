@@ -4,9 +4,9 @@ After=syslog.target network.target
 
 [Service]
 Type=simple
-User=app
-WorkingDirectory=/home/app
-ExecStart=/usr/bin/java -jar -Dspring.profiles.active=prod -Dserver.port=8080 /home/app/spring1-0.0.1-SNAPSHOT.jar
+User=arturs
+WorkingDirectory=/home/arturs/serveris
+ExecStart=/usr/bin/java -jar -Dspring.profiles.active=prod -Dserver.port=8080 /home/arturs/serveris/spring1-0.0.1-SNAPSHOT.jar
 Restart=always
 RestartSec=10
 StandardOutput=syslog
@@ -15,9 +15,10 @@ SyslogIdentifier=spring1
 
 # Environment variables for production
 Environment=DB_URL=jdbc:postgresql://your-db-host:5432/spelite
-Environment=DB_USERNAME=your-db-username
-Environment=DB_PASSWORD=your-db-password
+Environment=DB_USERNAME=arturs
+Environment=DB_PASSWORD=YWAuuR8t
 Environment=SPRING_PROFILES_ACTIVE=prod
+Environment=SERVER_PORT=8080
 
 [Install]
 WantedBy=multi-user.target

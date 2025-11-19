@@ -6,8 +6,8 @@ After=syslog.target network.target
 Type=simple
 User=arturs
 Group=arturs
-WorkingDirectory=/home/app
-ExecStart=/usr/bin/java -jar -Dspring.profiles.active=prod /home/arturs/serveris/spring1-0.0.1-SNAPSHOT.jar
+WorkingDirectory=/home/arturs/serveris
+ExecStart=/usr/bin/java -jar -Dspring.profiles.active=prod -Dserver.port=8080 /home/arturs/serveris/spring1-0.0.1-SNAPSHOT.jar
 SuccessExitStatus=143
 TimeoutStopSec=10
 Restart=on-failure

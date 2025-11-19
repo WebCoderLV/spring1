@@ -27,5 +27,7 @@ public class UserModel { // user_model
     @Column(name = "password")
     @NotBlank(message = "Password cannot be blank")
     private String password;
+    private int playedGames;
+    private int wonGames;
 
 }

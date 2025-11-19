@@ -1,5 +1,6 @@
 package org.arturs.firstSpring.controllers;
 
+import org.arturs.firstSpring.models.UserDTO;
 import org.arturs.firstSpring.models.UserModel;
 import org.arturs.firstSpring.services.UserServices;
 import org.springframework.http.HttpStatus;
@@ -28,9 +29,13 @@ public class UserControllers {
     private final UserServices userService;
 
     @PostMapping("/user")
-    public ResponseEntity<Long> addUser(@Valid @RequestBody UserModel user) {
-        Long userId = userService.findOrSaveUser(user);
-        return new ResponseEntity<>(userId, HttpStatus.OK);
+    public ResponseEntity<UserDTO> addUser(@Valid @RequestBody UserModel user) {
+        System.out.println("user = " + user);
+        UserDTO userDTO = userService.findOrSaveUser(user);
+        if (userDTO == null) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/user/{userId}")

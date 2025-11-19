@@ -27,15 +27,18 @@ public class GameService implements GameServiceInterface {
     public Long createGame(Long userId) {
         Optional<UserModel> userOpt = userRepository.findById(userId);
         if (userOpt.isPresent()) {
+            UserModel user = userOpt.get();
+            user.setPlayedGames(user.getPlayedGames() + 1);
+            userRepository.save(user);
+            gameRepository.deleteByUserId(userId);
             List<Integer> numbersList = GameUtility.generateRandomNumber();
             GameModel game = new GameModel();
             game.setUser(userOpt.get());
-            game.setNumber1(numbersList.get(0));
-            game.setNumber2(numbersList.get(1));
-            game.setNumber3(numbersList.get(2));
-            game.setNumber4(numbersList.get(3));
-            game.setWin(false);
-            Long gameId = gameRepository.save(game).getId();
+            game.setGuessNumber1(numbersList.get(0));
+            game.setGuessNumber2(numbersList.get(1));
+            game.setGuessNumber3(numbersList.get(2));
+            game.setGuessNumber4(numbersList.get(3));
+            Long gameId = gameRepository.save(game).getGameId();
             return gameId;
         } else {
             throw new IllegalArgumentException("User not found with id: " + userId);
@@ -43,13 +46,13 @@ public class GameService implements GameServiceInterface {
     }
 
     public GameDTO compareNumbers(GameModel gameModel) {
-        log.debug("GameModel received: {}", gameModel);
-        Optional<GameModel> gameOpt = gameRepository.findById(gameModel.getId());
+        Optional<GameModel> gameOpt = gameRepository.findById(gameModel.getGameId());
         if (gameOpt.isPresent()) {
-            List<Integer> numberFromDb = List.of(gameOpt.get().getNumber1(), gameOpt.get().getNumber2(),
-                    gameOpt.get().getNumber3(), gameOpt.get().getNumber4());
-            List<Integer> guessNumbers = List.of(gameModel.getNumber1(), gameModel.getNumber2(), gameModel.getNumber3(),
-                    gameModel.getNumber4());
+            List<Integer> numberFromDb = List.of(gameOpt.get().getGuessNumber1(), gameOpt.get().getGuessNumber2(),
+                    gameOpt.get().getGuessNumber3(), gameOpt.get().getGuessNumber4());
+            List<Integer> guessNumbers = List.of(gameModel.getGuessNumber1(), gameModel.getGuessNumber2(),
+                    gameModel.getGuessNumber3(),
+                    gameModel.getGuessNumber4());
             int p = 0;
             int a = 0;
             for (int i = 0; i < 4; i++) {
@@ -69,18 +72,17 @@ public class GameService implements GameServiceInterface {
             if (p == 4) {
                 UserModel user = gameOpt.get().getUser();
                 if (user != null) {
-                    gameModel.setWin(true);
-                    gameModel.setUser(user);
-                    gameRepository.save(gameModel);
-                    return new GameDTO(gameModel.getId(), "4", "0", true);
+                    user.setWonGames(user.getWonGames() + 1);
+                    userRepository.save(user);
+                    return new GameDTO(gameModel.getGameId(), "4", "0", true);
                 } else {
                     throw new IllegalStateException("Game exists but has no associated user");
                 }
             } else {
-                return new GameDTO(gameModel.getId(), String.valueOf(p), String.valueOf(a), false);
+                return new GameDTO(gameModel.getGameId(), String.valueOf(p), String.valueOf(a), false);
             }
         } else {
-            throw new IllegalArgumentException("Game not found with id: " + gameModel.getId());
+            throw new IllegalArgumentException("Game not found with id: " + gameModel.getGameId());
         }
     }
 }

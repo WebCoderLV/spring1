@@ -3,6 +3,7 @@ package org.arturs.firstSpring.services;
 import java.util.Optional;
 
 import org.arturs.firstSpring.interfaces.UserServiceInterface;
+import org.arturs.firstSpring.models.UserDTO;
 import org.arturs.firstSpring.models.UserModel;
 import org.arturs.firstSpring.repositories.GameRepository;
 import org.arturs.firstSpring.repositories.UserRepository;
@@ -14,23 +15,25 @@ import lombok.AllArgsConstructor;
 @Service
 public class UserServices implements UserServiceInterface {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final GameRepository gameRepository;
 
-    public Long findOrSaveUser(UserModel user) {
-        Optional<UserModel> existingUser = repository.findByNameAndPassword(user.getName(), user.getPassword());
+    public UserDTO findOrSaveUser(UserModel user) {
+        Optional<UserModel> existingUser = userRepository.findByNameAndPassword(user.getName(), user.getPassword());
         if (existingUser.isPresent()) {
-            return existingUser.get().getId();
+            return new UserDTO(existingUser.get().getId(), existingUser.get().getPlayedGames(),
+                    existingUser.get().getWonGames());
         } else {
-            UserModel savedUser = repository.save(user);
-            return savedUser.getId();
+            UserModel savedUser = userRepository.save(user);
+            return new UserDTO(savedUser.getId(), 0, 0);
         }
     }
 
     public void deleteUser(Long userId) {
-        // First delete all games associated with this user
-        gameRepository.deleteByUserId(userId);
-        // Then delete the user
-        repository.deleteById(userId);
+        Optional<UserModel> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            gameRepository.deleteByUserId(userId);
+            userRepository.deleteById(userId);
+        }
     }
 }

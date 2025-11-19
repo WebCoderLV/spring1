@@ -19,12 +19,11 @@ import lombok.NoArgsConstructor;
 public class GameModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long gameId;
     @ManyToOne(fetch = FetchType.LAZY)
     private UserModel user;
-    private int number1;
-    private int number2;
-    private int number3;
-    private int number4;
-    private boolean win;
+    private int guessNumber1;
+    private int guessNumber2;
+    private int guessNumber3;
+    private int guessNumber4;
 }

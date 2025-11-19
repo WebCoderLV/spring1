@@ -13,9 +13,7 @@ import org.arturs.firstSpring.utilities.GameUtility;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @AllArgsConstructor
 @Service
 public class GameService implements GameServiceInterface {

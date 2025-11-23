@@ -34,9 +34,11 @@ public class GameService implements GameServiceInterface {
 
         gameRepository.deleteByUserId(userId);
 
-        List<String> numbersList = GameUtility.generateRandomNumber();
+        String salt = GameUtility.generateSalt();
+        List<String> numbersList = GameUtility.generateRandomNumber(salt);
         GameModel game = new GameModel();
         game.setUser(user);
+        game.setSalt(salt);
         game.setGuessNumber1(numbersList.get(0));
         game.setGuessNumber2(numbersList.get(1));
         game.setGuessNumber3(numbersList.get(2));
@@ -54,6 +56,7 @@ public class GameService implements GameServiceInterface {
         GameModel game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("Game not found with id: " + gameId));
 
+        String salt = game.getSalt();
         List<String> hashedNumbersFromDb = List.of(
                 game.getGuessNumber1(),
                 game.getGuessNumber2(),
@@ -61,10 +64,10 @@ public class GameService implements GameServiceInterface {
                 game.getGuessNumber4());
 
         List<String> hashedGuessNumbers = List.of(
-                GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber1())),
-                GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber2())),
-                GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber3())),
-                GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber4())));
+                GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber1()), salt),
+                GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber2()), salt),
+                GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber3()), salt),
+                GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber4()), salt));
 
         int p = 0;
         int a = 0;

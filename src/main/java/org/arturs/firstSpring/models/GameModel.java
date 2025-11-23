@@ -26,4 +26,5 @@ public class GameModel {
     private String guessNumber2;
     private String guessNumber3;
     private String guessNumber4;
+    private String salt;
 }

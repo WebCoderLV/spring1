@@ -29,7 +29,7 @@ public class GameService implements GameServiceInterface {
             user.setPlayedGames(user.getPlayedGames() + 1);
             userRepository.save(user);
             gameRepository.deleteByUserId(userId);
-            List<Integer> numbersList = GameUtility.generateRandomNumber();
+            List<String> numbersList = GameUtility.generateRandomNumber();
             GameModel game = new GameModel();
             game.setUser(userOpt.get());
             game.setGuessNumber1(numbersList.get(0));
@@ -46,21 +46,23 @@ public class GameService implements GameServiceInterface {
     public GameDTO compareNumbers(GameModel gameModel) {
         Optional<GameModel> gameOpt = gameRepository.findById(gameModel.getGameId());
         if (gameOpt.isPresent()) {
-            List<Integer> numberFromDb = List.of(gameOpt.get().getGuessNumber1(), gameOpt.get().getGuessNumber2(),
+            List<String> hashedNumbersFromDb = List.of(gameOpt.get().getGuessNumber1(), gameOpt.get().getGuessNumber2(),
                     gameOpt.get().getGuessNumber3(), gameOpt.get().getGuessNumber4());
-            List<Integer> guessNumbers = List.of(gameModel.getGuessNumber1(), gameModel.getGuessNumber2(),
-                    gameModel.getGuessNumber3(),
-                    gameModel.getGuessNumber4());
+            List<String> hashedGuessNumbers = List.of(
+                    GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber1())),
+                    GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber2())),
+                    GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber3())),
+                    GameUtility.hashNumber(Integer.parseInt(gameModel.getGuessNumber4())));
             int p = 0;
             int a = 0;
             for (int i = 0; i < 4; i++) {
-                // Compare guessNumbers and numberFromDb to calculate p and a
-                if (guessNumbers.get(i).equals(numberFromDb.get(i))) {
+                // Compare hashed guessNumbers with hashed numberFromDb to calculate p and a
+                if (hashedGuessNumbers.get(i).equals(hashedNumbersFromDb.get(i))) {
                     // exact match
                     p++;
-                } else if (numberFromDb.contains(guessNumbers.get(i))) {
+                } else if (hashedNumbersFromDb.contains(hashedGuessNumbers.get(i))) {
                     for (int j = 0; j < 4; j++) {
-                        if (i != j && guessNumbers.get(i).equals(numberFromDb.get(j))) {
+                        if (i != j && hashedGuessNumbers.get(i).equals(hashedNumbersFromDb.get(j))) {
                             a++;
                             break;
                         }
@@ -84,15 +86,4 @@ public class GameService implements GameServiceInterface {
         }
     }
 
-    public GameModel giveUp(Long gameId) {
-        if (gameId == null) {
-            return new GameModel();
-        }
-        Optional<GameModel> gameOpt = gameRepository.findById(gameId);
-        if (gameOpt.isPresent()) {
-            return gameOpt.get();
-        } else {
-            return new GameModel();
-        }
-    }
 }

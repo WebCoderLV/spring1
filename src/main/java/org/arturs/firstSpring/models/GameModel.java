@@ -22,8 +22,8 @@ public class GameModel {
     private Long gameId;
     @ManyToOne(fetch = FetchType.LAZY)
     private UserModel user;
-    private int guessNumber1;
-    private int guessNumber2;
-    private int guessNumber3;
-    private int guessNumber4;
+    private String guessNumber1;
+    private String guessNumber2;
+    private String guessNumber3;
+    private String guessNumber4;
 }

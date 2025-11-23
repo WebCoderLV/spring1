@@ -83,4 +83,16 @@ public class GameService implements GameServiceInterface {
             throw new IllegalArgumentException("Game not found with id: " + gameModel.getGameId());
         }
     }
+
+    public GameModel giveUp(Long gameId) {
+        if (gameId == null) {
+            return new GameModel();
+        }
+        Optional<GameModel> gameOpt = gameRepository.findById(gameId);
+        if (gameOpt.isPresent()) {
+            return gameOpt.get();
+        } else {
+            return new GameModel();
+        }
+    }
 }
